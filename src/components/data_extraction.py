@@ -3,6 +3,7 @@ import sys
 from src.exception import CustomException
 from src.logger import logging
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -10,9 +11,9 @@ from dataclasses import dataclass
 
 @dataclass
 class DataIngestionConfig:
-    train_data_path: str = os.path.join('csv_files',"train.csv")   # csv_files - folder
-    test_data_path: str = os.path.join('csv_files',"test.csv")
-    raw_data_path: str = os.path.join('csv_files',"raw.csv")
+    train_data_path: str = os.path.join('data_pickle_files',"train.csv")   # csv_files - folder
+    test_data_path: str = os.path.join('data_pickle_files',"test.csv")
+    raw_data_path: str = os.path.join('data_pickle_files',"raw.csv")
 
 class DataIngestion:
     def __init__(self):
@@ -52,7 +53,14 @@ if __name__=="__main__":
     train_path, test_path = path_obj.initiate_data_ingestion()
     
     data_obj = DataTransformation()
-    train_data, test_data = data_obj.initiate_data_transformation(train_path,test_path)
+    train_data, test_data,_ = data_obj.initiate_data_transformation(train_path,test_path)
+    
+    trainer_obj = ModelTrainer()
+    model,score = trainer_obj.initialize_model_trainer(train_data, test_data)
+
+    print("Best Model  : {} : Score : {}".format(model,score))
+    
+    
 
 
     

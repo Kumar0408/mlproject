@@ -15,7 +15,7 @@ from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
- preprocessor_obj_file_path = os.path.join('csv_files',"preprocessor.pkl")
+ preprocessor_obj_file_path = os.path.join('data_pickle_files',"preprocessor.pkl")
 
 class DataTransformation:
   def __init__(self):
@@ -91,6 +91,8 @@ class DataTransformation:
       input_features_test_df = test_df.drop(columns=[target_column_name],axis=1)
       target_features_test_df = test_df[target_column_name]
 
+      #print(train_df.head())
+
       logging.info("Apllting preprocessor object on training and testing df")
 
       input_features_train_arr = preprocessor_obj.fit_transform(input_features_train_df)
@@ -108,6 +110,11 @@ class DataTransformation:
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessor_obj
 
+            )
+      return (
+                train_arr,
+                test_arr,
+                self.data_transformation_config.preprocessor_obj_file_path,
             )
     except Exception as e:
       raise CustomException(e,sys)
